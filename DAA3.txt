@@ -1,0 +1,45 @@
+# Function to solve Fractional Knapsack problem
+def fractional_knapsack(value, weight, capacity):
+    n = len(value)
+
+    # Step 1: Calculate value/weight ratio for each item
+    ratio = []
+    for i in range(n):
+        ratio.append((value[i] / weight[i], value[i], weight[i]))
+
+    # Step 2: Sort items by ratio in descending order
+    ratio.sort(reverse=True)
+
+    total_value = 0.0  # total profit
+    total_weight = 0.0
+
+    # Step 3: Pick items greedily
+    for r, v, w in ratio:
+        if total_weight + w <= capacity:
+            total_value += v
+            total_weight += w
+        else:
+            remain = capacity - total_weight
+            total_value += r * remain
+            total_weight += remain
+            break
+
+    return total_value
+
+
+# Main program
+n = int(input("Enter number of items: "))
+value = []
+weight = []
+
+for i in range(n):
+    v = float(input(f"Enter value of item {i+1}: "))
+    w = float(input(f"Enter weight of item {i+1}: "))
+    value.append(v)
+    weight.append(w)
+
+capacity = float(input("Enter capacity of knapsack: "))
+
+max_value = fractional_knapsack(value, weight, capacity)
+
+print(f"\nMaximum value in knapsack = {max_value:.2f}")

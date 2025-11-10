@@ -1,0 +1,38 @@
+import heapq
+
+# Function to generate Huffman codes
+def huffman_encoding(text):
+    # Step 1: Count frequency of each character
+    freq = {}
+    for ch in text:
+        freq[ch] = freq.get(ch, 0) + 1
+
+    # Step 2: Create a priority queue (min-heap)
+    heap = [[weight, [symbol, ""]] for symbol, weight in freq.items()]
+    heapq.heapify(heap)
+
+    # Step 3: Combine two smallest elements until one remains
+    while len(heap) > 1:
+        low1 = heapq.heappop(heap)
+        low2 = heapq.heappop(heap)
+
+        for pair in low1[1:]:
+            pair[1] = '0' + pair[1]  # left branch
+        for pair in low2[1:]:
+            pair[1] = '1' + pair[1]  # right branch
+
+        heapq.heappush(heap, [low1[0] + low2[0]] + low1[1:] + low2[1:])
+
+    # Step 4: Extract the final codes
+    huffman_codes = sorted(heapq.heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
+    return huffman_codes
+
+
+# Main program
+text = input("Enter text: ")
+
+codes = huffman_encoding(text)
+
+print("\nCharacter\tHuffman Code")
+for ch, code in codes:
+    print(f"{repr(ch)}\t\t{code}")

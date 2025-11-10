@@ -1,0 +1,43 @@
+# Recursive Fibonacci with step count
+def recursive_fib(n, steps):
+    steps[0] += 1  # count this function call
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return recursive_fib(n - 1, steps) + recursive_fib(n - 2, steps)
+
+
+# Iterative Fibonacci with step count
+def iterative_fib(n, steps):
+    a, b = 0, 1
+    steps[0] = 0  # reset step count
+
+    if n == 0:
+        steps[0] += 1
+        return 0
+
+    for i in range(2, n + 1):
+        a, b = b, a + b
+        steps[0] += 1  # count one step per iteration
+
+    return b
+
+
+# Main program
+n = int(input("Enter n: "))
+
+# Recursive
+steps_recursive = [0]  # using list to pass by reference
+fib_rec = recursive_fib(n, steps_recursive)
+
+# Iterative
+steps_iterative = [0]
+fib_itr = iterative_fib(n, steps_iterative)
+
+print(f"\nFibonacci({n}) using recursion = {fib_rec}")
+print(f"Step count (Recursive): {steps_recursive[0]}")
+
+print(f"\nFibonacci({n}) using iteration = {fib_itr}")
+print(f"Step count (Iterative): {steps_iterative[0]}")

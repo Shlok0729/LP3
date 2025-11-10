@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract StudentDB {
+    struct Student {
+        string name;
+        uint256 rollno;
+        string className;
+    }
+
+    Student[] private students;
+
+    function addStudent(string memory name, uint256 rollno, string memory className) public {
+        students.push(Student(name, rollno, className));
+    }
+
+    // Return student details as a single message string (safe & readable)
+    function getStudentById(uint256 id) public view returns (string memory) {
+        if (id >= students.length) {
+            return " Error: Student does not exist in the database.";
+        }
+
+        Student memory s = students[id];
+        return string(
+            abi.encodePacked(
+                "Name: ", s.name,
+                ", Roll No: ", uint2str(s.rollno),
+                ", Class: ", s.className
+            )
+        );
+    }
+
+    function getTotalNumberOfStudents() public view returns (uint256) {
+        return students.length;
+    }
+
+    // Helper function to convert uint → string
+    function uint2str(uint256 _i) internal pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint256 j = _i;
+        uint256 len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint256 k = len;
+        while (_i != 0) {
+            k = k - 1;
+            uint8 temp = uint8(48 + uint256(_i % 10));
+            bstr[k] = bytes1(temp);
+            _i /= 10;
+        }
+        return string(bstr);
+    }
+}

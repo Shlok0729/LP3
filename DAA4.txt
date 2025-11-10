@@ -1,0 +1,40 @@
+def knapsack_01(values, weights, capacity):
+    n = len(values)
+    # Create DP table (n+1) x (capacity+1)
+    dp = [[0 for _ in range(capacity + 1)] for _ in range(n + 1)]
+
+    # Build the table in bottom-up manner
+    for i in range(1, n + 1):
+        for w in range(1, capacity + 1):
+            if weights[i - 1] <= w:
+                # Option 1: include item
+                include = values[i - 1] + dp[i - 1][w - weights[i - 1]]
+                # Option 2: exclude item
+                exclude = dp[i - 1][w]
+                dp[i][w] = max(include, exclude)
+            else:
+                dp[i][w] = dp[i - 1][w]
+
+    # The last cell contains the result
+    return dp[n][capacity], dp
+
+
+# Main Program
+n = int(input("Enter number of items: "))
+values = []
+weights = []
+
+for i in range(n):
+    values.append(int(input(f"Enter value of item {i+1}: ")))
+    weights.append(int(input(f"Enter weight of item {i+1}: ")))
+
+capacity = int(input("Enter capacity of knapsack: "))
+
+max_value, dp_table = knapsack_01(values, weights, capacity)
+
+print(f"\nMaximum value that can be obtained = {max_value}\n")
+
+# Optional: Display DP table
+print("DP Table:")
+for row in dp_table:
+    print(row)
